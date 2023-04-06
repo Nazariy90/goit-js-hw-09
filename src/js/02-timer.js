@@ -3,7 +3,6 @@ import 'flatpickr/dist/flatpickr.min.css';
 import Notiflix from 'notiflix';
 const startBTN = document.querySelector('button[data-start]');
 startBTN.disabled = true;
-const ollTimerField = document.querySelector('.timer');
 
 const options = {
   enableTime: true,
@@ -26,6 +25,7 @@ const timer = {
   intervalId: null,
 
   start() {
+    const timerValues = Array.from(document.querySelectorAll('.value'));
     this.intervalId = setInterval(() => {
       const ms = this.deadline - Date.now();
 
@@ -34,15 +34,11 @@ const timer = {
         return;
       }
 
-      let { days, hours, minutes, seconds } = this.convertMs(ms);
-      ollTimerField.querySelector('[data-days]').innerHTML =
-        this.addLeadingZero(days);
-      ollTimerField.querySelector('[data-hours]').innerHTML =
-        this.addLeadingZero(hours);
-      ollTimerField.querySelector('[data-minutes]').innerHTML =
-        this.addLeadingZero(minutes);
-      ollTimerField.querySelector('[data-seconds]').innerHTML =
-        this.addLeadingZero(seconds);
+      const { days, hours, minutes, seconds } = this.convertMs(ms);
+      const values = [days, hours, minutes, seconds];
+      values.forEach((value, index) => {
+        timerValues[index].textContent = this.addLeadingZero(value);
+      });
     }, 1000);
   },
 
